@@ -1,8 +1,17 @@
+# Core Dependencies
+opencv-python
 numpy==1.26.4
-opencv-python==4.10.0.84
 mediapipe==0.10.14
-insightface==0.7.3
 chromadb==0.5.23
-onnxruntime-directml==1.24.4
 protobuf==4.25.9
 tqdm
+pandas
+matplotlib
+
+# V1: ArcFace
+insightface==0.7.3
+onnxruntime-directml
+
+# V2: DINOv2
+torch
+torchvision

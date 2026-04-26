@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  # Service to run ArcFace Version
+  arcface:
+    build: .
+    volumes:
+      - ./v1_arcface/chroma_db:/app/v1_arcface/chroma_db
+    command: python3 v1_arcface/main.py
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  # Service to run DINOv2 Version
+  dinov2:
+    build: .
+    volumes:
+      - ./v2_dinov2/chroma_db:/app/v2_dinov2/chroma_db
+    command: python3 v2_dinov2/main.py
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  # Service for the Battle (Comparison)
+  compare:
+    build: .
+    volumes:
+      - .:/app
+    command: python3 compare.py
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]

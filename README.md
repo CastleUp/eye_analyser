@@ -1,76 +1,88 @@
-# Eye Recognition System 👁️
+# Eye Recognition & Model Comparison Framework 👁️⚖️
 
-A real-time eye recognition application built with **MediaPipe**, **InsightFace**, and **ChromaDB**. This system allows you to enroll individuals and identify them in real-time with high precision using GPU acceleration.
+A professional framework for real-time periocular (eye area) recognition and comparison between different deep learning architectures. This project compares a specialized Face Recognition model (**ArcFace**) with a general-purpose Vision Transformer (**DINOv2**).
 
-## ✨ Features
-- **Neural & Color Hybrid**: Combines ArcFace embeddings with iris color analysis for maximum accuracy.
-- **DirectML Support**: High-performance GPU acceleration on Windows (NVIDIA, AMD, Intel).
-- **Temporal Voting**: Multi-frame consensus logic to eliminate false positives and flickering.
-- **Image Enhancement**: CLAHE-based eye preprocessing for better texture recognition.
-- **Dual Enrollment**: Support for both live webcam and static image registration.
+## 📊 Project Overview
+The goal of this project is to evaluate how different neural network architectures perform when restricted only to the eye area. It includes real-time processing, vector storage, and a comparison engine with automated visualization.
+
+### ⚔️ The Contenders
+- **V1: ArcFace (InsightFace Buffalo_L)**
+  - **Type**: CNN-based Metric Learning (Specialized for humans).
+  - **Focus**: Global facial geometry and identity-invariant features.
+  - **Strength**: High stability, low sensitivity to lighting and minor rotations.
+- **V2: DINOv2 (Meta ViT-S/14)**
+  - **Type**: Vision Transformer (Self-supervised Foundation Model).
+  - **Focus**: Fine-grained local textures and patch-level details.
+  - **Strength**: Extremely high sensitivity to iris patterns and skin texture.
 
 ---
 
-## 🛠️ Requirements
-- Python 3.10+
-- Webcam
-- Windows GPU with DirectX 12 support (for DirectML)
+## ✨ Key Features
+- **Hybrid Embedding**: Neural vectors augmented with Iris Color features for better precision.
+- **DirectML Acceleration**: Native Windows GPU support (NVIDIA, AMD, Intel).
+- **Battle Mode**: Simultaneous real-time inference from both models on a single video stream.
+- **Auto-Visualization**: Generates comparison charts (`.png`) from session logs (`.csv`).
+- **Temporal Voting**: Multi-frame consensus logic to eliminate recognition flickering.
 
 ---
 
-## 🚀 Installation
+## 🚀 Getting Started
 
-### 1. Clone the repository
+### 1. Installation
 ```bash
-git clone https://github.com/your-username/eye-analyser.git
-cd eye-analyser
+# Install core dependencies
+pip install -r v1_arcface/requirements.txt
+
+# Install PyTorch (Required for DINOv2)
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+
+# Install Plotting tools
+pip install pandas matplotlib
 ```
 
-### 2. Install dependencies
+### 2. Enrollment (Data Collection)
+You must enroll your eyes in both databases for comparison:
 ```bash
-pip install -r requirements.txt
-```
-
----
-
-## 💻 Usage
-
-### Step 1: Enrollment
-You can enroll users in two ways:
-
-**A. Via Webcam (Recommended for accuracy):**
-```bash
+# Enroll in V1
+cd v1_arcface
 python enroll.py
-```
-- The system will ask if you want to clear the database.
-- Follow the on-screen instructions (look straight, eyes open).
-- Press **SPACE** to capture 20 high-quality samples.
+cd ..
 
-**B. Via Static Image:**
-```bash
-python enroll_image.py "path/to/image.jpg" "UserName"
+# Enroll in V2
+cd v2_dinov2
+python enroll.py
+cd ..
 ```
 
-### Step 2: Real-Time Recognition
-Run the main recognition loop:
+### 3. Running the Comparison (Battle Mode)
+Run both models side-by-side:
 ```bash
-python main.py
+python compare.py
 ```
-- **GREEN OVERLAY**: User recognized.
-- **RED OVERLAY**: Unknown user or low confidence.
-- Results are smoothed over 10 frames for stability.
+*Press **'q'** to exit and save the log.*
+
+### 4. Generating the Report
+Create a comparison chart from your session data:
+```bash
+python plot_results.py
+```
+This will generate `recognition_comparison.png`.
 
 ---
 
-## ⚙️ Project Structure
-- `eye_processor.py`: MediaPipe landmarks, CLAHE enhancement, and eye cropping.
-- `model_handler.py`: InsightFace inference with Color Feature extraction and DirectML setup.
-- `db_handler.py`: ChromaDB vector search management.
-- `enroll.py`: Interactive live enrollment script.
-- `enroll_image.py`: Script for bulk enrollment from photos.
-- `main.py`: Main application loop with temporal voting logic.
+## 📂 Project Structure
+- `/v1_arcface`: ArcFace-based implementation (Robust & Fast).
+- `/v2_dinov2`: DINOv2-based implementation (Texture-sensitive).
+- `compare.py`: The "Battle" engine running both models simultaneously.
+- `plot_results.py`: Visualization script for performance analysis.
+- `comparison_log.csv`: Raw distance data from your last session.
+
+---
+
+## 📈 Analysis Results
+Based on our tests, **ArcFace (V1)** provides more stable identity confirmation for "Access Control" scenarios, while **DINOv2 (V2)** is more suitable for "Liveness Detection" or "Fine-grained Detail" analysis due to its high sensitivity to local changes.
 
 ---
 
 ## ⚖️ License
-MIT License. Feel free to use and modify.
+MIT License. Created for research and educational purposes.

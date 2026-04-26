@@ -1,33 +1,32 @@
-# Use an official Python runtime as a parent image
-FROM python:3.10-slim
+# Use NVIDIA CUDA base image
+FROM nvidia/cuda:12.1.1-cudnn8-runtime-ubuntu22.04
 
-# Set the working directory in the container
-WORKDIR /app
+# Set environment variables
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PYTHONUNBUFFERED=1
 
-# Install system dependencies for OpenCV, MediaPipe, and InsightFace
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
+    python3-pip \
+    python3-dev \
     libgl1-mesa-glx \
     libglib2.0-0 \
-    libsm6 \
-    libxext6 \
-    libxrender-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy the requirements file into the container
+# Set working directory
+WORKDIR /app
+
+# Copy requirements and install
 COPY requirements.txt .
+# Install torch with CUDA support explicitly
+RUN pip3 install --no-cache-dir torch torchvision --index-url https://download.pytorch.org/whl/cu121
+# Install the rest
+RUN pip3 install --no-cache-dir -r requirements.txt
+# For Linux/Docker, we switch back to onnxruntime-gpu
+RUN pip3 uninstall -y onnxruntime-directml && pip3 install onnxruntime-gpu
 
-# Install any needed packages specified in requirements.txt
-# Note: Using onnxruntime instead of onnxruntime-gpu for broader compatibility in Docker
-# unless specific CUDA images are used.
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy the rest of the application code
+# Copy the rest of the project
 COPY . .
 
-# Environment variable to help with GUI (if configured)
-ENV DISPLAY=:0
-
-# The application requires a webcam and GUI. 
-# Docker containers don't have these by default.
-# Instructions on how to run with GUI/Webcam are in README.md
-CMD ["python", "main.py"]
+# Default command (can be overridden)
+CMD ["python3", "compare.py"]

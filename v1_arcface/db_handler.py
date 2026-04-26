@@ -1,10 +1,16 @@
 import chromadb
 from chromadb.config import Settings
 import uuid
+import os
 
 class DBHandler:
-    def __init__(self, db_path="./chroma_db"):
-        self.client = chromadb.PersistentClient(path=db_path)
+    def __init__(self, persistent_path=None):
+        # Determine the absolute path to the directory where THIS file is located
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        if persistent_path is None:
+            persistent_path = os.path.join(current_dir, "chroma_db")
+            
+        self.client = chromadb.PersistentClient(path=persistent_path)
         # Create or get collection
         # We use cosine similarity as requested in TZ
         self.collection = self.client.get_or_create_collection(
