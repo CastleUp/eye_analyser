@@ -1,0 +1,29 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Databases
+chroma_db/
+
+# Models (optional to ignore if they are auto-downloaded)
+.insightface/
+
+# Virtual environment
+venv/
+.env
+.venv
+env/
+ENV/
+
+# IDEs
+.vscode/
+.idea/
+
+# Artifacts
+*.log
+implementation_plan.md
