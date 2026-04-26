@@ -68,6 +68,29 @@ python plot_results.py
 ```
 This will generate `recognition_comparison.png`.
 
+## 🐳 Docker Deployment
+
+The project is fully containerized with GPU support. You can run different versions using **Docker Compose**:
+
+**Build the environment:**
+```bash
+docker-compose build
+```
+
+**Run specific services:**
+```bash
+# Run the Comparison Battle
+docker-compose run compare
+
+# Run only ArcFace (V1)
+docker-compose run arcface
+
+# Run only DINOv2 (V2)
+docker-compose run dinov2
+```
+
+> **Note:** For webcam access inside Docker on Windows/Mac, additional configuration (like WSL2 USB pass-through) may be required.
+
 ---
 
 ## 📂 Project Structure
